@@ -30,7 +30,7 @@ sync = require('./sync')
 
 module.exports =
 	signature: 'watch <uuid>'
-	description: 'sync a project directory with a device'
+	description: 'sync a project directory with a rpi device'
 	help: '''
 		Use this command to push changes on the fly to a certain device.
 
@@ -41,7 +41,7 @@ module.exports =
 	permission: 'user'
 	action: (params, options, done) ->
 
-		directory = process.cwd()
+		directory = process.cwd()+'/'
 
 		# Connect to the first found ip address
 		resin.models.device.getLocalIPAddresses(params.uuid).get(0).then (ip) ->

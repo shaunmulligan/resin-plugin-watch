@@ -28,9 +28,9 @@ Promise = require('bluebird')
 child_process = Promise.promisifyAll(require('child_process'))
 rsync = require('rsync')
 
-USERNAME = 'resinwatch'
+USERNAME = 'root'
 DESTINATION_PATH = '/data/.resin-watch'
-PORT = '5511'
+PORT = '80'
 
 exports.buildCommand = (ip, options = {}) ->
 	_.defaults options,
@@ -63,4 +63,4 @@ exports.perform = (ip, directory) ->
 		flags: 'avzr'
 
 		# http://mike-hostetler.com/blog/2007/12/08/rsync-non-standard-ssh-port/
-		shell: "ssh -p #{PORT}"
+		shell: "ssh -oStrictHostKeyChecking=no -p #{PORT}"

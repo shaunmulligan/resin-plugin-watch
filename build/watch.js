@@ -36,12 +36,12 @@ sync = require('./sync');
 
 module.exports = {
   signature: 'watch <uuid>',
-  description: 'sync a project directory with a device',
+  description: 'sync a project directory with a rpi device',
   help: 'Use this command to push changes on the fly to a certain device.\n\nExamples:\n\n	$ resin watch 768fdc5d6d687dac5ee45b64ffe939779a38a3958f686efc4f0339bce60906',
   permission: 'user',
   action: function(params, options, done) {
     var directory;
-    directory = process.cwd();
+    directory = process.cwd() + '/';
     return resin.models.device.getLocalIPAddresses(params.uuid).get(0).then(function(ip) {
       var watch;
       console.info("Connecting to " + params.uuid + ": " + ip);

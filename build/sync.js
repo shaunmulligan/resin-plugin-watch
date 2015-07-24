@@ -34,11 +34,11 @@ child_process = Promise.promisifyAll(require('child_process'));
 
 rsync = require('rsync');
 
-USERNAME = 'resinwatch';
+USERNAME = 'root';
 
 DESTINATION_PATH = '/data/.resin-watch';
 
-PORT = '5511';
+PORT = '80';
 
 exports.buildCommand = function(ip, options) {
   var command;
@@ -66,6 +66,6 @@ exports.perform = function(ip, directory) {
   return exports.execute(ip, {
     source: directory,
     flags: 'avzr',
-    shell: "ssh -p " + PORT
+    shell: "ssh -oStrictHostKeyChecking=no -p " + PORT
   });
 };
