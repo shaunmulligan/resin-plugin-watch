@@ -51,7 +51,7 @@ module.exports = {
       });
       watch.on('change', function(type, filePath) {
         console.info("[" + (utils.getCurrentTime()) + "] - " + (type.toUpperCase()) + ": " + filePath);
-        return sync.perform(ip, directory).then(function() {
+        return sync.perform(params.uuid, directory).then(function() {
           console.info('Synced, restarting application');
           return resin.models.device.getApplicationName(params.uuid).then(resin.models.application.restart);
         });

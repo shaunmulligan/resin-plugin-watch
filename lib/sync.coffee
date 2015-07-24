@@ -32,25 +32,26 @@ USERNAME = 'root'
 DESTINATION_PATH = '/data/.resin-watch'
 PORT = '80'
 
-exports.buildCommand = (ip, options = {}) ->
+exports.buildCommand = (uuid, options = {}) ->
+	hostName = uuid + '.resin'
 	_.defaults options,
-		destination: "#{USERNAME}@#{ip}:#{DESTINATION_PATH}"
+		destination: "#{USERNAME}@#{uuid}:#{DESTINATION_PATH}"
 
 	command = Promise.promisifyAll(rsync.build(options))
 	command.set('password-file', path.join(__dirname, 'password.txt'))
 	return command
 
-exports.execute = (ip, options = {}) ->
+exports.execute = (uuid, options = {}) ->
 
 	# Remove device from known_hosts since the device host key
 	# changes each time the container is restarted.
 	# child_process.execAsync "ssh-keygen -R #{ip}:#{PORT}", ->
 
-	command = exports.buildCommand(ip, options)
+	command = exports.buildCommand(uuid, options)
 	return command.executeAsync()
 
-exports.perform = (ip, directory) ->
-	exports.execute ip,
+exports.perform = (uuid, directory) ->
+	exports.execute uuid,
 		source: directory
 
 		# a = archive mode.

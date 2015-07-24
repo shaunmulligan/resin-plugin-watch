@@ -41,7 +41,7 @@ module.exports =
 	permission: 'user'
 	action: (params, options, done) ->
 
-		directory = process.cwd()+'/'
+		directory = process.cwd() + '/'
 
 		# Connect to the first found ip address
 		resin.models.device.getLocalIPAddresses(params.uuid).get(0).then (ip) ->
@@ -58,7 +58,7 @@ module.exports =
 
 				# TODO: We should implement some kind of semaphore to
 				# prevent performing syncs multiple times in a short amount of time
-				sync.perform(ip, directory).then ->
+				sync.perform(params.uuid, directory).then ->
 
 					console.info('Synced, restarting application')
 

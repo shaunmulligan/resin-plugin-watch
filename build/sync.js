@@ -40,30 +40,31 @@ DESTINATION_PATH = '/data/.resin-watch';
 
 PORT = '80';
 
-exports.buildCommand = function(ip, options) {
-  var command;
+exports.buildCommand = function(uuid, options) {
+  var command, hostName;
   if (options == null) {
     options = {};
   }
+  hostName = uuid + '.resin';
   _.defaults(options, {
-    destination: "" + USERNAME + "@" + ip + ":" + DESTINATION_PATH
+    destination: "" + USERNAME + "@" + uuid + ":" + DESTINATION_PATH
   });
   command = Promise.promisifyAll(rsync.build(options));
   command.set('password-file', path.join(__dirname, 'password.txt'));
   return command;
 };
 
-exports.execute = function(ip, options) {
+exports.execute = function(uuid, options) {
   var command;
   if (options == null) {
     options = {};
   }
-  command = exports.buildCommand(ip, options);
+  command = exports.buildCommand(uuid, options);
   return command.executeAsync();
 };
 
-exports.perform = function(ip, directory) {
-  return exports.execute(ip, {
+exports.perform = function(uuid, directory) {
+  return exports.execute(uuid, {
     source: directory,
     flags: 'avzr',
     shell: "ssh -oStrictHostKeyChecking=no -p " + PORT
