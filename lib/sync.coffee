@@ -34,20 +34,19 @@ PORT = '80'
 
 exports.buildCommand = (uuid, options = {}) ->
 	hostName = uuid + '.resin'
+	console.log('Hostname: ' + hostName)
 	_.defaults options,
-		destination: "#{USERNAME}@#{uuid}:#{DESTINATION_PATH}"
+		destination: "#{USERNAME}@#{hostName}:#{DESTINATION_PATH}"
 
 	command = Promise.promisifyAll(rsync.build(options))
-	command.set('password-file', path.join(__dirname, 'password.txt'))
+	# command.set('password-file', path.join(__dirname, 'password.txt'))
+
 	return command
 
 exports.execute = (uuid, options = {}) ->
 
-	# Remove device from known_hosts since the device host key
-	# changes each time the container is restarted.
-	# child_process.execAsync "ssh-keygen -R #{ip}:#{PORT}", ->
-
 	command = exports.buildCommand(uuid, options)
+	console.log(command.command())
 	return command.executeAsync()
 
 exports.perform = (uuid, directory) ->
@@ -63,5 +62,4 @@ exports.perform = (uuid, directory) ->
 		# r = recursive
 		flags: 'avzr'
 
-		# http://mike-hostetler.com/blog/2007/12/08/rsync-non-standard-ssh-port/
-		shell: "ssh -oStrictHostKeyChecking=no -p #{PORT}"
+		shell: 'ssh -p 80 -o \"ProxyCommand nc -X connect -x vpn.resinstaging.io:3128 %h %p\" -o StrictHostKeyChecking=no'

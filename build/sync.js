@@ -46,11 +46,11 @@ exports.buildCommand = function(uuid, options) {
     options = {};
   }
   hostName = uuid + '.resin';
+  console.log('Hostname: ' + hostName);
   _.defaults(options, {
-    destination: "" + USERNAME + "@" + uuid + ":" + DESTINATION_PATH
+    destination: "" + USERNAME + "@" + hostName + ":" + DESTINATION_PATH
   });
   command = Promise.promisifyAll(rsync.build(options));
-  command.set('password-file', path.join(__dirname, 'password.txt'));
   return command;
 };
 
@@ -60,6 +60,7 @@ exports.execute = function(uuid, options) {
     options = {};
   }
   command = exports.buildCommand(uuid, options);
+  console.log(command.command());
   return command.executeAsync();
 };
 
@@ -67,6 +68,6 @@ exports.perform = function(uuid, directory) {
   return exports.execute(uuid, {
     source: directory,
     flags: 'avzr',
-    shell: "ssh -oStrictHostKeyChecking=no -p " + PORT
+    shell: 'ssh -p 80 -o \"ProxyCommand nc -X connect -x vpn.resinstaging.io:3128 %h %p\" -o StrictHostKeyChecking=no'
   });
 };
