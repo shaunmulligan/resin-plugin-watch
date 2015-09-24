@@ -38,10 +38,7 @@ exports.buildCommand = (uuid, options = {}) ->
 	_.defaults options,
 		destination: "#{USERNAME}@#{hostName}:#{DESTINATION_PATH}"
 
-	command = Promise.promisifyAll(rsync.build(options))
-	# command.set('password-file', path.join(__dirname, 'password.txt'))
-
-	return command
+	return Promise.promisifyAll(rsync.build(options))
 
 exports.execute = (uuid, options = {}) ->
 

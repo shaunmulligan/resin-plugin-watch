@@ -41,7 +41,7 @@ DESTINATION_PATH = '/data/.resin-watch';
 PORT = '80';
 
 exports.buildCommand = function(uuid, options) {
-  var command, hostName;
+  var hostName;
   if (options == null) {
     options = {};
   }
@@ -50,8 +50,7 @@ exports.buildCommand = function(uuid, options) {
   _.defaults(options, {
     destination: "" + USERNAME + "@" + hostName + ":" + DESTINATION_PATH
   });
-  command = Promise.promisifyAll(rsync.build(options));
-  return command;
+  return Promise.promisifyAll(rsync.build(options));
 };
 
 exports.execute = function(uuid, options) {
